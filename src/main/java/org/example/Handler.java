@@ -83,7 +83,6 @@ public class Handler implements Runnable {
                 ).getBytes());
                 Files.copy(filePath, out);
                 out.flush();
-
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -15,25 +15,21 @@ public class Main {
 
     final var server = new Server();
     ExecutorService ex = Executors.newFixedThreadPool(64);
-    try (
-            final var serverSocket = server.serverStart()) {
-      while (true) {
-
-        //
-        try (
-                final var socket = serverSocket.accept();
-                //final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                //final var out = new BufferedOutputStream(socket.getOutputStream())
-        )
-        //
-        {
-          socket.setSoTimeout(3000);
-          ex.execute(new Handler(socket));
-        }
-      }
+    final ServerSocket serverSocket;
+    try {
+      serverSocket = server.serverStart();
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
+    while (true) {
+        final Socket socket;
+        try {
+          socket = serverSocket.accept();
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+        ex.execute(new Handler(socket));
+      }
   }
 }
 
