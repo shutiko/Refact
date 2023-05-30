@@ -1,30 +1,29 @@
 package org.example;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
-    //String host = "127.0.0.1\n";
-    int port = 9999;
-    ServerSocket serverSocket;
+    final int COUNT = 64;
 
-    Socket socket;
+    ExecutorService executorService = Executors.newFixedThreadPool(COUNT);
 
+    public void listen(int port) {
 
-    public ServerSocket serverStart() throws IOException {
-        this.serverSocket = new ServerSocket(port);
-        return serverSocket;
-    }
+        try (final ServerSocket serverSocket = new ServerSocket(port)) {
 
-    public void handler () {
+            while (true) {
+                final Socket socket = serverSocket.accept();
+                Handler handler = new Handler(socket);
+                executorService.submit(handler);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

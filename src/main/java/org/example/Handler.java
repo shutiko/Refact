@@ -32,7 +32,6 @@ public class Handler implements Runnable {
                 // must be in form GET /path HTTP/1.1
                 final var requestLine = in.readLine();
                 final var parts = requestLine.split(" ");
-
                 if (parts.length != 3) {
                     // just close socket
                     continue;
@@ -72,7 +71,7 @@ public class Handler implements Runnable {
                     continue;
                 }
 
-                System.out.println(filePath);
+                //System.out.println(filePath);
                 final var length = Files.size(filePath);
                 out.write((
                         "HTTP/1.1 200 OK\r\n" +
